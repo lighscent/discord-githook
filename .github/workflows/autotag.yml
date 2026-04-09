@@ -40,3 +40,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag ${{ steps.pkg_version.outputs.version }}
           git push origin ${{ steps.pkg_version.outputs.version }}
+
+      - name: Create Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.pkg_version.outputs.version }}
+          name: Release ${{ steps.pkg_version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
