@@ -3,7 +3,7 @@ name: Auto Tag on Version Change
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'package.json'
 
