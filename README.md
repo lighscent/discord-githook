@@ -13,7 +13,7 @@ A lightweight, simple Discord bot to receive GitHub repository events via webhoo
 All commands require the `AUTHORIZED_ID` permissions defined in your `.env` file.
 - `/create-webhook [name] [channel]`: Create a new webhook.
 - `/list-webhooks`: List all active webhooks and their stats.
-- `/delete-webhook [partial_uuid]`: Remove a webhook.
+- `/delete-webhook [name]`: Remove a webhook.
 
 ## Installation
 
@@ -31,10 +31,12 @@ All commands require the `AUTHORIZED_ID` permissions defined in your `.env` file
 3. **Setup environment variables:**
    Create a `.env` file in the root directory:
    ```env
+   PORT=3000
+   DOMAIN=your_public_domain_or_ip
+   DISCORD_CHANNEL_ID=your_discord_channel_id
    DISCORD_TOKEN=your_discord_bot_token
    AUTHORIZED_ID=your_discord_user_id
-   DOMAIN=your_public_domain_or_ip
-   PORT=3000
+   
    GITHUB_WEBHOOK_SECRET=your_secret_string
    ```
 
@@ -49,7 +51,7 @@ Once you've created a webhook via Discord using `/create-webhook`, you'll receiv
 2. Click "Add webhook".
 3. **Payload URL:** Paste the URL provided by the bot.
 4. **Content type:** `application/json`.
-5. **Secret:** Match the `GITHUB_WEBHOOK_SECRET` in your `.env`.
+5. **Secret:** Match the `GITHUB_WEBHOOK_SECRET` in your `.env`. (Optional but recommended for security.)
 6. **Events:** Select "Just the push event" (currently supported).
 
 ## License
