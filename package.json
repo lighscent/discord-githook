@@ -1,6 +1,7 @@
 {
   "name": "discord-githook",
-  "version": "1.0.0",
+  "description": "A lightweight, simple Discord bot to receive GitHub repository events via webhooks and post them as clean embeds in your Discord channels.",
+  "version": "1.0.1",
   "main": "main.js",
   "license": "MIT",
   "dependencies": {
