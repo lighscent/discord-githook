@@ -55,4 +55,4 @@ Once you've created a webhook via Discord using `/create-webhook`, you'll receiv
 6. **Events:** Select "Just the push event" (currently supported).
 
 ## License
-MIT
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
