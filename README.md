@@ -33,7 +33,6 @@ All commands require the `AUTHORIZED_ID` permissions defined in your `.env` file
    ```env
    PORT=3000
    DOMAIN=your_public_domain_or_ip
-   DISCORD_CHANNEL_ID=your_discord_channel_id
    DISCORD_TOKEN=your_discord_bot_token
    AUTHORIZED_ID=your_discord_user_id
    
