@@ -8,6 +8,7 @@ A lightweight, simple Discord bot to receive GitHub repository events via webhoo
 - 🔐 **Secure:** Verification of GitHub signatures and unique UUID-based endpoints.
 - 💾 **SQLite Persistence:** Keeps track of your webhooks across restarts.
 - 🛠️ **Slash Commands:** Manage everything directly from Discord.
+- 🎨 **Customizable Embeds:** Fine-tune how GitHub events appear in Discord with detailed settings.
 
 ## Commands
 All commands require the `AUTHORIZED_ID` permissions defined in your `.env` file.
@@ -19,7 +20,7 @@ All commands require the `AUTHORIZED_ID` permissions defined in your `.env` file
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/discord-githook.git
+   git clone https://github.com/lighscent/discord-githook.git
    cd discord-githook
    ```
 
@@ -43,6 +44,41 @@ All commands require the `AUTHORIZED_ID` permissions defined in your `.env` file
    ```bash
    node main.js
    ```
+
+## Configuration
+
+The bot's behavior can be customized using the `settings.json` file. This file allows you to control how GitHub events are displayed in Discord embeds.
+
+### Settings Overview
+
+- **behavior**: Controls what information is shown and how pushes are handled.
+  - `oneCommitPerMessage`: Send one embed per commit (true) or group commits (false).
+  - `showFileNames`: Include file names in the embed.
+  - `showCommitUrls`: Include links to commits.
+  - `showCommitMessageBody`: Show full commit messages.
+  - `showCompareLink`: Include compare links for pushes.
+  - `onlyDefaultBranch`: Only process pushes to the default branch.
+
+- **limits**: Set limits to prevent spam.
+  - `maxCommitsPerEmbed`: Maximum commits per embed.
+  - `maxEmbedsPerPush`: Maximum embeds per push event.
+  - `maxFilesPerCommit`: Maximum files shown per commit.
+
+- **display**: Customize embed appearance.
+  - `showRepoNameInTitle`: Include repository name in embed title.
+  - `showBranchInTitle`: Include branch name in title.
+  - `showCommitCountInTitle`: Show commit count in title.
+  - `embedDescriptionSeparator`: Separator for descriptions.
+  - `fileListPrefix`: Prefix for file lists.
+
+- **embed**: Embed styling.
+  - `embedColor`: Hex color for embeds (default: Discord blue).
+  - `footerText`: Text in embed footer.
+
+- **author**: Author display options.
+  - `showAuthorIcon`: Show author avatar.
+  - `useAuthorUrl`: Link to author's GitHub profile.
+  - `authorUsePusher`: Use pusher instead of author for commits.
 
 ## GitHub Setup
 Once you've created a webhook via Discord using `/create-webhook`, you'll receive a URL.
