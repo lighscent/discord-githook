@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,7 +17,7 @@ module.exports = {
         const webhook = rows.find(r => r.name.toLowerCase() === name.toLowerCase());
 
         if (!webhook) {
-            return await interaction.reply({ content: `No webhook found with the name: **${name}**`, ephemeral: true });
+            return await interaction.reply({ content: `No webhook found with the name: **${name}**`, flags: MessageFlags.Ephemeral });
         }
 
         // Confirmation buttons
@@ -36,7 +36,8 @@ module.exports = {
         const response = await interaction.reply({
             content: `Are you sure you want to delete the webhook **${webhook.name}**? This action is **not reversible**.`,
             components: [row],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral,
+            fetchReply: true
         });
 
         // Collector for the buttons

@@ -3,15 +3,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const DatabaseManager = require('./db/database');
-const GitHubHandler = require('./utils/github');
+const GitHubHandler = require('./utils/github/index');
 const { createDiscordBot } = require('./utils/discord');
+const settings = require('./settings.json');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const db = new DatabaseManager();
 const discordBot = createDiscordBot(db, port, app);
-const githubHandler = new GitHubHandler(db, discordBot.client);
+const githubHandler = new GitHubHandler(db, discordBot.client, settings);
 
 app.use(bodyParser.json());
 

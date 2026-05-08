@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,7 +8,7 @@ module.exports = {
     async execute(interaction, db) {
         const rows = db.getAllWebhooks();
         if (rows.length === 0) {
-            return await interaction.reply({ content: 'No active webhooks.', ephemeral: true });
+            return await interaction.reply({ content: 'No active webhooks.', flags: MessageFlags.Ephemeral });
         }
 
         const lines = rows.map(row => {
@@ -20,7 +20,7 @@ module.exports = {
 
         await interaction.reply({
             content: `**Active webhooks (${rows.length}):**\n\n${lines.slice(0, 10).join('\n\n')}${rows.length > 10 ? '\n\n...and ' + (rows.length - 10) + ' more.' : ''}`,
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
     }
 };

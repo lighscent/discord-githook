@@ -1,0 +1,31 @@
+{
+  "behavior": {
+    "oneCommitPerMessage": true,
+    "showFileNames": false,
+    "showCommitUrls": true,
+    "showCommitMessageBody": false,
+    "showCompareLink": true,
+    "onlyDefaultBranch": false
+  },
+  "limits": {
+    "maxCommitsPerEmbed": 5,
+    "maxEmbedsPerPush": 20,
+    "maxFilesPerCommit": 10
+  },
+  "display": {
+    "showRepoNameInTitle": true,
+    "showBranchInTitle": true,
+    "showCommitCountInTitle": true,
+    "embedDescriptionSeparator": "\n\n",
+    "fileListPrefix": "Files:"
+  },
+  "embed": {
+    "embedColor": "7289DA",
+    "footerText": "Open-Source Project | github.com/lighscent/discord-githook"
+  },
+  "author": {
+    "showAuthorIcon": true,
+    "useAuthorUrl": true,
+    "authorUsePusher": true
+  }
+}

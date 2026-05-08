@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,11 +25,11 @@ module.exports = {
 
             await interaction.reply({
                 content: `Webhook **${whName}** created for <#${channel.id}> !\n\n**GitHub URL:**\n\`${webhookUrl}\`\n\n*Keep this URL secret.*`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: "Error while creating the webhook.", ephemeral: true });
+            await interaction.reply({ content: "Error while creating the webhook.", flags: MessageFlags.Ephemeral });
         }
     }
 };

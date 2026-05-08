@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { Client, GatewayIntentBits, REST, Routes, Events } = require('discord.js');
+const { Client, GatewayIntentBits, REST, Routes, Events, MessageFlags } = require('discord.js');
 
 class DiscordBot {
     constructor(db, port, app) {
@@ -37,7 +37,7 @@ class DiscordBot {
             if (process.env.AUTHORIZED_ID && interaction.user.id !== process.env.AUTHORIZED_ID) {
                 return await interaction.reply({
                     content: "You don't have permission to use this command.",
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             }
 
@@ -48,7 +48,7 @@ class DiscordBot {
                 await command.execute(interaction, this.db, this.port);
             } catch (error) {
                 console.error(error);
-                await interaction.reply({ content: 'Error executing the command.', ephemeral: true });
+                await interaction.reply({ content: 'Error executing the command.', flags: MessageFlags.Ephemeral });
             }
         });
 
