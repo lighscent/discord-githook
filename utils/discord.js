@@ -32,6 +32,18 @@ class DiscordBot {
 
     registerEvents() {
         this.client.on(Events.InteractionCreate, async interaction => {
+            if (interaction.isAutocomplete()) {
+                const command = this.commands.get(interaction.commandName);
+                if (!command || !command.autocomplete) return;
+
+                try {
+                    await command.autocomplete(interaction, this.db);
+                } catch (error) {
+                    console.error(error);
+                }
+                return;
+            }
+
             if (!interaction.isChatInputCommand()) return;
 
             if (process.env.AUTHORIZED_ID && interaction.user.id !== process.env.AUTHORIZED_ID) {

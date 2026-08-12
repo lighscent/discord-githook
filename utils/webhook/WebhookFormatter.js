@@ -1,9 +1,10 @@
-class GitHubFormatter {
-    constructor(settings, payload, repoName, branch) {
+class WebhookFormatter {
+    constructor(settings, payload, repoName, branch, platform = 'github') {
         this.settings = settings;
         this.payload = payload;
         this.repoName = repoName;
         this.branch = branch;
+        this.platform = platform;
 
         this.oneCommitPerMessage = this.settings.getBehavior('oneCommitPerMessage') === true;
         this.showFileNames = this.oneCommitPerMessage && this.settings.getBehavior('showFileNames') === true;
@@ -32,7 +33,7 @@ class GitHubFormatter {
         if (this.showCommitCountInTitle) {
             return `${prefix}${commitCount} new commit(s)`;
         }
-        return prefix.trim() || 'GitHub push';
+        return prefix.trim() || `${this.platform === 'forgejo' ? 'Forgejo' : 'GitHub'} push`;
     }
 
     formatFileList(commit, maxFiles) {
@@ -80,4 +81,4 @@ class GitHubFormatter {
     }
 }
 
-module.exports = GitHubFormatter;
+module.exports = WebhookFormatter;

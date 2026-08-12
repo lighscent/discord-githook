@@ -1,29 +1,54 @@
-const GitHubSettings = require('./GitHubSettings');
-const GitHubFormatter = require('./GitHubFormatter');
-const GitHubEmbedBuilder = require('./GitHubEmbedBuilder');
+const crypto = require('crypto');
+const WebhookSettings = require('./WebhookSettings');
+const WebhookFormatter = require('./WebhookFormatter');
+const WebhookEmbedBuilder = require('./WebhookEmbedBuilder');
 
-class GitHubHandler {
+class WebhookHandler {
     constructor(db, client, settings = {}) {
         this.db = db;
         this.client = client;
-        this.settings = new GitHubSettings(settings);
+        this.settings = new WebhookSettings(settings);
     }
 
-    verifySignature(req) {
+    verifySignature(req, platform = 'github') {
+        if (platform === 'forgejo') {
+            const signature = req.headers['x-forgejo-signature']
+                || req.headers['x-gitea-signature']
+                || req.headers['x-hub-signature-256'];
+            const secret = process.env.FORGEJO_WEBHOOK_SECRET || process.env.GITHUB_WEBHOOK_SECRET;
+
+            if (secret && signature) {
+                const raw = signature.startsWith('sha256=') ? signature.slice(7) : signature;
+                if (!raw) return true;
+
+                const hmac = crypto.createHmac('sha256', secret);
+                const digest = Buffer.from(hmac.update(JSON.stringify(req.body)).digest('hex'), 'utf8');
+                const checksum = Buffer.from(raw, 'utf8');
+
+                if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         const signature = req.headers['x-hub-signature-256'];
         if (process.env.GITHUB_WEBHOOK_SECRET && signature) {
-            const hmac = require('crypto').createHmac('sha256', process.env.GITHUB_WEBHOOK_SECRET);
+            const raw = signature.startsWith('sha256=') ? signature.slice(7) : signature;
+            if (!raw) return true;
+
+            const hmac = crypto.createHmac('sha256', process.env.GITHUB_WEBHOOK_SECRET);
             const digest = Buffer.from('sha256=' + hmac.update(JSON.stringify(req.body)).digest('hex'), 'utf8');
             const checksum = Buffer.from(signature, 'utf8');
 
-            if (checksum.length !== digest.length || !require('crypto').timingSafeEqual(digest, checksum)) {
+            if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
                 return false;
             }
         }
         return true;
     }
 
-    async handlePush(uuid, payload) {
+    async handlePush(uuid, payload, platform = 'github') {
         const row = this.db.getWebhook(uuid);
         if (!row) {
             return { status: 404, message: 'Webhook not found' };
@@ -47,8 +72,8 @@ class GitHubHandler {
             return { status: 200 };
         }
 
-        const formatter = new GitHubFormatter(this.settings, payload, repoName, branch);
-        const embedBuilder = new GitHubEmbedBuilder(this.settings, payload);
+        const formatter = new WebhookFormatter(this.settings, payload, repoName, branch, platform);
+        const embedBuilder = new WebhookEmbedBuilder(this.settings, payload, platform);
 
         const commitLimit = this.settings.getLimit('maxCommitsPerEmbed');
         const embedLimit = this.settings.getLimit('maxEmbedsPerPush');
@@ -83,4 +108,4 @@ class GitHubHandler {
     }
 }
 
-module.exports = GitHubHandler;
+module.exports = WebhookHandler;

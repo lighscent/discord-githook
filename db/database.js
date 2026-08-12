@@ -19,6 +19,8 @@ class DatabaseManager {
 
         this.ensureColumn('webhooks', 'lastTriggered', 'TEXT');
         this.ensureColumn('webhooks', 'triggerCount', 'INTEGER DEFAULT 0');
+        this.ensureColumn('webhooks', 'platform', "TEXT DEFAULT 'github'");
+        this.ensureColumn('webhooks', 'comment', 'TEXT');
     }
 
     ensureColumn(table, column, type) {
@@ -28,17 +30,21 @@ class DatabaseManager {
         }
     }
 
-    createWebhook(uuid, channelId, name) {
-        return this.db.prepare('INSERT INTO webhooks (uuid, channelId, name, lastTriggered, triggerCount) VALUES (?, ?, ?, ?, 0)')
-            .run(uuid, channelId, name, null);
+    createWebhook(uuid, channelId, name, platform = 'github', comment = null) {
+        return this.db.prepare('INSERT INTO webhooks (uuid, channelId, name, lastTriggered, triggerCount, platform, comment) VALUES (?, ?, ?, ?, 0, ?, ?)')
+            .run(uuid, channelId, name, null, platform, comment);
     }
 
     getWebhook(uuid) {
         return this.db.prepare('SELECT channelId, name FROM webhooks WHERE uuid = ?').get(uuid);
     }
 
+    getWebhookInfo(uuid) {
+        return this.db.prepare('SELECT uuid, channelId, name, platform, comment, lastTriggered, COALESCE(triggerCount, 0) as triggerCount FROM webhooks WHERE uuid = ?').get(uuid);
+    }
+
     getAllWebhooks() {
-        return this.db.prepare('SELECT uuid, channelId, name, lastTriggered, COALESCE(triggerCount, 0) as triggerCount FROM webhooks').all();
+        return this.db.prepare('SELECT uuid, channelId, name, platform, comment, lastTriggered, COALESCE(triggerCount, 0) as triggerCount FROM webhooks').all();
     }
 
     updateWebhookTrigger(uuid) {

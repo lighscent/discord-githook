@@ -1,16 +1,17 @@
 {
-  "name": "discord-githook",
-  "description": "A lightweight, simple Discord bot to receive GitHub repository events via webhooks and post them as clean embeds in your Discord channels.",
-  "version": "1.0.5",
+  "name": "githook",
+  "description": "A lightweight, simple Discord bot to receive GitHub and Forgejo repository events via webhooks and post them in your Discord channels.",
+  "version": "1.1.0",
+  "author": "xl1te <github.com/lighscent>",
   "main": "main.js",
   "license": "MIT",
   "dependencies": {
-    "better-sqlite3": "^12.8.0",
-    "body-parser": "^2.2.2",
-    "discord.js": "^14.26.2",
-    "dotenv": "^17.4.1",
+    "better-sqlite3": "^13.0.3",
+    "body-parser": "^2.3.0",
+    "discord.js": "^14.27.0",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "sqlite3": "^6.0.1",
-    "uuid": "^14.0.0"
+    "uuid": "^14.0.1"
   }
 }

@@ -7,13 +7,36 @@ module.exports = {
         .addStringOption(option =>
             option.setName('webhook_name')
                 .setDescription('The exact name of the webhook to delete')
-                .setRequired(true)),
+                .setRequired(true)
+                .setAutocomplete(true)),
+
+    async autocomplete(interaction, db) {
+        const focused = interaction.options.getFocused().toLowerCase();
+        const rows = db.getAllWebhooks()
+            .filter(row => interaction.guild.channels.cache.has(row.channelId))
+            .filter(row => row.name.toLowerCase().includes(focused));
+
+        const choices = rows.slice(0, 25).map(row => {
+            const platformLabel = row.platform === 'forgejo' ? 'Forgejo' : 'GitHub';
+            const last = row.lastTriggered
+                ? new Date(row.lastTriggered).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                : 'never';
+
+            return {
+                name: `${row.name} | ${platformLabel} | last push: ${last}`.slice(0, 100),
+                value: row.name.slice(0, 100)
+            };
+        });
+
+        await interaction.respond(choices);
+    },
 
     async execute(interaction, db) {
         const name = interaction.options.getString('webhook_name');
 
         // Find by name instead of partial UUID
-        const rows = db.getAllWebhooks();
+        const rows = db.getAllWebhooks()
+            .filter(row => interaction.guild.channels.cache.has(row.channelId));
         const webhook = rows.find(r => r.name.toLowerCase() === name.toLowerCase());
 
         if (!webhook) {
@@ -37,11 +60,11 @@ module.exports = {
             content: `Are you sure you want to delete the webhook **${webhook.name}**? This action is **not reversible**.`,
             components: [row],
             flags: MessageFlags.Ephemeral,
-            fetchReply: true
+            withResponse: true
         });
 
         // Collector for the buttons
-        const collector = response.createMessageComponentCollector({
+        const collector = response.resource.message.createMessageComponentCollector({
             componentType: ComponentType.Button,
             time: 30000
         });

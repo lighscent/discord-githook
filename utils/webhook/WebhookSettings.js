@@ -1,4 +1,4 @@
-class GitHubSettings {
+class WebhookSettings {
     constructor(settings = {}) {
         this.settings = settings;
     }
@@ -36,7 +36,7 @@ class GitHubSettings {
             case 'embed':
                 return {
                     embedColor: '7289DA',
-                    footerText: 'Open-Source Project | github.com/lighscent/discord-githook'
+                    footerText: 'Open-Source Project | github.com/lighscent/githook'
                 }[key];
             case 'author':
                 return {
@@ -81,4 +81,4 @@ class GitHubSettings {
     }
 }
 
-module.exports = GitHubSettings;
+module.exports = WebhookSettings;
